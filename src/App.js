@@ -2,7 +2,6 @@ import React from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
-import { selectCurrentUser } from "./redux/user/user.selectors";
 
 import "./App.css";
 
@@ -11,9 +10,10 @@ import ShopPage from "./pages/shop/shop.component";
 import SignInAndSignUpPage from "./pages/sign-in-and-sign-up/sign-in-and-sign-up.component";
 import CheckoutPage from "./pages/checkout/checkout.component";
 
-import Header from "./components/header/header.component";
-import { auth, createUserProfileDocument} from "./firebase/firebase.util";
-import { setCurrentUser } from "./redux/user/user.actions";
+import Header from "./components/header/header.component"
+import { selectCurrentUser } from "./redux/user/user.selectors";
+import { checkUserSession } from './redux/user/user.actions'
+
 //import { selectCollectionsForPreview } from './redux/shop/shop.selectors'
 
 
@@ -21,8 +21,10 @@ class App extends React.Component {
   unsubscribeFromAuth= null
 
   componentDidMount(){
-    const  { setCurrentUser} = this.props
-     this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
+    const { checkUserSession } = this.props
+    checkUserSession()
+  
+     /* this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
       if(userAuth) {
         const userRef = await createUserProfileDocument(userAuth)
 
@@ -33,10 +35,9 @@ class App extends React.Component {
           })
         })
       }
-      else {
+      
         setCurrentUser(userAuth)
-      }
-    })
+    }) */
   }
 
   componentWillUnmount() {
@@ -67,12 +68,21 @@ const mapStateToProps = createStructuredSelector({
 })
 
 const mapDispatchToProps = dispatch => ({
-  setCurrentUser: user => dispatch(setCurrentUser(user))
+  checkUserSession: () => dispatch(checkUserSession())
 })
 
+
 export default connect(mapStateToProps, 
-  mapDispatchToProps)
-  (App);
+  mapDispatchToProps
+  )(App);
+
+
+
+
+
+
+
+
 
 /* import { Card } from './components/card.component'
 import styled from 'styled-components'
