@@ -1,4 +1,6 @@
 import React from "react";
+import { Switch, Route, Redirect } from "react-router-dom";
+
 
 import CollectionItem from '../collection-item/collection-item.component'
 
